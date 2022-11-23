@@ -4,9 +4,10 @@ from flask import Flask, jsonify
 def create_app():
     app = Flask(__name__)
 
-    @app.route('/')
-    def index():
-        return jsonify({"Hello": "World"})
+    # Ping route to test the app
+    @app.route('/ping/')
+    def ping():
+        return jsonify({"status": "OK"})
 
     return app 
 
