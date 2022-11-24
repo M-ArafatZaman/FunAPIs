@@ -1,4 +1,3 @@
-from flask import request 
 from functools import wraps 
 
 # Function decorator to enable cors response
