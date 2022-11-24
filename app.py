@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from api.index import API_BLUEPRINT, loadEndpoints
+from api.index import loadEndpoints
 
 # Create app
 def create_app():
@@ -11,8 +11,7 @@ def create_app():
         return jsonify({"status": "OK"})
 
     # Register API endpoints
-    loadEndpoints()
-    app.register_blueprint(API_BLUEPRINT)
+    app.register_blueprint(loadEndpoints())
 
     return app 
 
