@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from api.index import API_BLUEPRINT, loadEndpoints
 
 # Create app
 def create_app():
@@ -8,6 +9,10 @@ def create_app():
     @app.route('/ping/')
     def ping():
         return jsonify({"status": "OK"})
+
+    # Register API endpoints
+    loadEndpoints()
+    app.register_blueprint(API_BLUEPRINT)
 
     return app 
 
