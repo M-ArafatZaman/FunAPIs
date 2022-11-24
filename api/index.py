@@ -2,9 +2,13 @@ from flask import Blueprint
 import os
 import importlib.util
 from typing import List, Tuple, Callable
+import uuid
 
 # class for endpoints
 class Endpoint:
+    '''
+    This Endpoint Class is utilized to provide a streamline process for registering routes
+    '''
     def __init__(self, url: str):
         self.url: str = url
         self._fn = None
@@ -14,6 +18,7 @@ class Endpoint:
 
     def getFn(self):
         if self._fn != None:
+            self._fn.__name__ = str(uuid.uuid1().hex)
             return self._fn 
         # Didnt register Fn yet
         raise NotImplementedError()
@@ -41,6 +46,7 @@ def loadEndpoints():
         mod_path = os.path.join(os.getcwd(), path)
         # Import file if it is a valid python file
         if os.path.isfile(mod_path) and path.endswith(".py"):
+            # Load module
             spec = importlib.util.spec_from_file_location(path, mod_path)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
@@ -63,6 +69,10 @@ def loadEndpoints():
             
 # Util functions
 def getGlobalsFromModule(dir: List[str]):
+    '''
+    This function returns a list of non default attributes. 
+    I.e, removes all __xyz__ attributes
+    '''
     _globals = []
     for i in dir:
         if i.startswith("__") and i.endswith("__"):
