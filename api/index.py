@@ -1,22 +1,22 @@
 from flask import Blueprint
-import os, sys
+import os
 import importlib.util
-from typing import List
+from typing import List, Tuple, Callable
 
 # class for endpoints
 class Endpoint:
     def __init__(self, url: str):
         self.url: str = url
         self._fn = None
-
-    def fn(self, *args, **kwargs):
-        if self._fn != None:
-            return self._fn(*args, **kwargs)
-        # Must be implemented
-        raise NotImplementedError()
     
     def register(self, fn):
         self._fn = fn
+
+    def getFn(self):
+        if self._fn != None:
+            return self._fn 
+        # Didnt register Fn yet
+        raise NotImplementedError()
 
 # Load endpoints
 def loadEndpoints():
@@ -31,6 +31,8 @@ def loadEndpoints():
     PATH = os.path.abspath(__file__)
     SCRIPT_DIR = os.path.dirname(PATH)
     ENDPOINT_DIR_PATH = os.path.join(SCRIPT_DIR, 'endpoints')
+
+    url_route: Tuple[str, Callable] = []
     
     # Change dir to the endpoints dir
     os.chdir(ENDPOINT_DIR_PATH)
@@ -47,17 +49,15 @@ def loadEndpoints():
                 # Load
                 _G = getattr(module, _globals)
                 if isinstance(_G, Endpoint):
-                    # Add route
-                    API_BLUEPRINT.route(_G.url)(_G.fn)
-                    '''
-                    Equivalent to - 
-                    @API_BLUEPRINT.route(url)
-                    def fn():
-                        pass
-                    '''
+                    # Add to url patterns
+                    url_route.append((_G.url, _G.getFn()))
 
     # Change back to the curr dir
     os.chdir(CURR_DIR)
+
+    # Register routes
+    for pathName, fn in url_route:
+        API_BLUEPRINT.route(pathName)(fn)
 
     return API_BLUEPRINT
             
