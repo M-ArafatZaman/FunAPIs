@@ -19,7 +19,8 @@ def myEndpoint():
     # Edit however your want
     return jsonify({"test": "success"})
 
-Route = Endpoint("/barplot") # The path parameter is just a flask parameter, can be edited however you want.
+# The path parameter is just a flask parameter, can be edited however you want.
+Route = Endpoint("/barplot")
 Route.register(myEndpoint)
 
 ```
