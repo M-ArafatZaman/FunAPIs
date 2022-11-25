@@ -49,5 +49,5 @@ def barplot():
         return jsonify({"status": 500, "message": "A server error occured."}), 500
 
 
-BarPlotEndpoint = Endpoint("/barplot")
+BarPlotEndpoint = Endpoint("/barplot/")
 BarPlotEndpoint.register(barplot)
