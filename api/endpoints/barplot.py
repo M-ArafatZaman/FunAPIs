@@ -10,7 +10,9 @@ from api.index import Endpoint
 import matplotlib.pyplot as plt
 from typing import List
 import io
+from middlewares import enableCORS
 
+@enableCORS
 def barplot():
     data = request.args.get("data")
     
