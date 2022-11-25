@@ -1,3 +1,4 @@
+from flask import make_response
 from functools import wraps 
 
 # Function decorator to enable cors response
@@ -7,7 +8,7 @@ def enableCORS(func):
         # Before calling
 
         # Call
-        response = func(*args, **kwargs)
+        response = make_response( func(*args, **kwargs) )
 
         # After calling
         response.headers["Access-Control-Allow-Origin"] = "*"
