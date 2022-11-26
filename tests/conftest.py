@@ -11,8 +11,8 @@ def app():
     This fixture setups and configures the main
     """
 
-    _app = create_app()
-    _app.config.update({
+    app = create_app()
+    app.config.update({
         "TESTING": True
     })
 
@@ -27,4 +27,4 @@ def client(app):
     """
     This fixture returns a client instance of the app.
     """
-    return app.client()
+    return app.test_client()
