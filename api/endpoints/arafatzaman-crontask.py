@@ -27,6 +27,7 @@ def remixDev() -> tuple[Response, int]:
         code = resp.status_code
         status_codes[page] = resp.status_code
 
+    # Return a json response
     return jsonify({
         "status": code,
         "pages": status_codes
