@@ -5,20 +5,32 @@ from flask import jsonify, Response
 from api.index import Endpoint
 
 ## Ping the remix dev site
-
-ARAFATZAMAN = "https://arafatzaman.dev/"
+BASE = "https://arafatzaman.dev"
+PAGES: dict[str, str] = {
+    "HOME": "/",
+    "PORTFOLIO": "/portfolio/",
+    "PROJECTS": "/projects/",
+    "BLOG": "/blog/",
+    "CONTACT": "/contact/"
+}
 
 @enableCORS
 def remixDev() -> tuple[Response, int]:
     """
-    A cron task to ping the remix server
+    A cron task to ping each route of the remix server
     """
-    stamp = time.time()
-    resp = requests.get(f"{ARAFATZAMAN}?stamp={stamp}")
+    status_codes: dict[str, int] = {}
+    code = 400
+    for page in PAGES:
+        stamp = time.time()
+        resp = requests.get(f"{BASE}{PAGES[page]}?stamp={stamp}")
+        code = resp.status_code
+        status_codes[page] = resp.status_code
 
     return jsonify({
-        "status": resp.status_code
-    }), resp.status_code
+        "status": code,
+        "pages": status_codes
+    }), code
 
 # Register the endpoint to the app
 app = Endpoint("arafatzaman-ping/")
